@@ -3,7 +3,7 @@ import os
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
-# Remove unused import statement
+
 # import numpy as np
 
 # Select features and target
@@ -13,7 +13,7 @@ def load_single_file(file_path):
     df = pd.read_csv(file_path, sep=',')
     df.dropna()
 
-    columns_to_keep = ['clouds', 'wind_speed', 'hour_of_day', 'fire', 'rain', 'dt', 'day_of_week', 'humidity', 'viirs_point', 'temperature']
+    columns_to_keep = ['clouds', 'wind_speed', 'hour_of_day', 'fire', 'rain', 'dt', 'day_of_week', 'humidity', 'temperature']
     columns_to_keep = [col for col in columns_to_keep if col in df.columns]
     df = df[columns_to_keep]
 
@@ -28,8 +28,8 @@ def load_single_file(file_path):
 
 
 # ------ File Handling ------
-data_folder = r'C:\Users\seebr\OneDrive\Desktop\Model_fire\data\features'  
-file_paths = [os.path.join(data_folder, file) for file in os.listdir(data_folder) if file.endswith('.csv')][:35000]
+data_folder = os.getcwd() + '\\data\\features'
+file_paths = [os.path.join(data_folder, file) for file in os.listdir(data_folder) if file.endswith('.csv')]
 
 # Split into training and testing sets
 train_files, test_files = train_test_split(file_paths, test_size=0.2, random_state=42)
@@ -41,7 +41,7 @@ for file in train_files:
     all_training_data= pd.concat([all_training_data, data], ignore_index=True) 
 
 # Feature Engineering
-X_train = all_training_data.drop(['fire', 'dt', 'viirs_point'], axis=1)  
+X_train = all_training_data.drop(['fire', 'dt'], axis=1)  
 y_train = all_training_data['fire']
 y_train = y_train.astype('int')
 # Select features and target
@@ -67,7 +67,7 @@ for file in test_files:
     data = load_single_file(file)
     
     
-    X_test  = data.drop(['fire', 'dt', 'viirs_point'], axis=1)
+    X_test  = data.drop(['fire', 'dt'], axis=1)
     
     
     y_test = data['fire']
