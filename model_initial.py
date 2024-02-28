@@ -10,19 +10,20 @@ from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_sc
 
 # ------ Data Loading and Preprocessing ------
 def load_single_file(file_path):
-    df = pd.read_csv(file_path, sep=',')
-    df.dropna()
+    try:
+        df = pd.read_csv(file_path, sep=',')
+        df.dropna()
 
-    columns_to_keep = ['clouds', 'wind_speed', 'hour_of_day', 'fire', 'rain', 'dt', 'day_of_week', 'humidity', 'temperature']
-    columns_to_keep = [col for col in columns_to_keep if col in df.columns]
-    df = df[columns_to_keep]
+        columns_to_keep = ['clouds', 'wind_speed', 'hour_of_day', 'fire', 'rain', 'dt', 'day_of_week', 'humidity', 'temperature']
+        columns_to_keep = [col for col in columns_to_keep if col in df.columns]
+        df = df[columns_to_keep]
 
-    # ... rest of your preprocessing ...
+        # ... rest of your preprocessing ...
 
-    return df
-
-     
-
+        return df
+    except FileNotFoundError:
+        print(f"File not found: {file_path}")
+        return None  # return None if file not found
     # Do any necessary preprocessing here, e.g., handling missing values
     # ... your preprocessing steps ...
 
@@ -38,8 +39,8 @@ all_training_data = pd.DataFrame()
 
 for file in train_files:
     data = load_single_file(file)
-    all_training_data= pd.concat([all_training_data, data], ignore_index=True) 
-
+    if data is not None:  # only concatenate if data is not None
+        all_training_data = pd.concat([all_training_data, data], ignore_index=True)
 # Feature Engineering
 X_train = all_training_data.drop(['fire', 'dt'], axis=1)  
 y_train = all_training_data['fire']
