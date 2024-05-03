@@ -18,14 +18,10 @@ def load_single_file(file_path):
         columns_to_keep = [col for col in columns_to_keep if col in df.columns]
         df = df[columns_to_keep]
 
-        # ... rest of your preprocessing ...
-
         return df
     except FileNotFoundError:
         print(f"File not found: {file_path}")
         return None  # return None if file not found
-    # Do any necessary preprocessing here, e.g., handling missing values
-    # ... your preprocessing steps ...
 
 
 # ------ File Handling ------
@@ -45,19 +41,15 @@ for file in train_files:
 X_train = all_training_data.drop(['fire', 'dt'], axis=1)  
 y_train = all_training_data['fire']
 y_train = y_train.astype('int')
+
 # Select features and target
 # Model Creation and Training
+
 clf = RandomForestClassifier(random_state=42) 
 clf.fit(X_train, y_train)
-
-# ------ Testing ------
 all_predictions = []
 all_ground_truth = []
-
-
 directory = 'test_files'
-
-# List to store the names of empty files
 empty_files = []
 
 # Total number of files
@@ -77,7 +69,7 @@ for file in test_files:
     all_predictions.extend(predictions)
     all_ground_truth.extend(y_test)
 
-# ------ Evaluation ------
+
 from sklearn.metrics import confusion_matrix
 
 # Confusion Matrix
